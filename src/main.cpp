@@ -1,27 +1,43 @@
 #include <Arduino.h>
 
-/*
-  Blink an ESP8266 NodeMCU board
-  Turns flashes an LED for one second delay.
-  
-  This program needs no circuit. It will use a built-in LED
-  
-  by Eng. Alaa Al Nassan
- */
+// #define ledPin 16
 
+#define ANA A0
+#define DIGI D5
+#define SENSOR D7
+//Power pin (Pump via transistor)
+#define POMPOUT D6
 
-# define LED D4 // Use built-in LED which connected to D4 pin or GPIO 2
+double analogValue = 0.0;
+int digitalValue = 0;
+double analogVolts = 0.0;
+unsigned long timeHolder = 0;
 
 void setup() {
-  pinMode(LED, OUTPUT);     // Initialize the LED as an output
+  pinMode(ANA, INPUT);
+  pinMode(DIGI, INPUT);
+  pinMode(SENSOR, OUTPUT);
+  pinMode(POMPOUT, OUTPUT);
   Serial.begin(115200);
+  Serial.println("Test");
 }
 
 void loop() {
-  digitalWrite(LED, HIGH);  // Turn the LED off because the LED is active low
-  Serial.println("OFF");
-  delay(1000);            // Wait a second
-  digitalWrite(LED, LOW);   // Turn the LED on because the LED is active low
-  Serial.println("ON");
-  delay(1000);              // Wait a second
+  digitalWrite(SENSOR, HIGH);
+  delay(100);
+  analogValue = analogRead(ANA);
+  digitalValue = digitalRead(DIGI);
+  digitalWrite(SENSOR, LOW);
+
+  // if (analogValue >= 600) {
+    digitalWrite(POMPOUT, LOW);
+  //   Serial.print("Water the plant");  
+  // }
+  // Serial data
+  Serial.print("Analog raw: ");
+  Serial.println(analogValue);
+  Serial.print("Digital raw: ");
+  Serial.println(digitalValue);
+  Serial.println(" ");
+  delay(1000);
 }
